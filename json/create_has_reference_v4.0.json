@@ -1,0 +1,29 @@
+{
+  "config": {"log":"debug"},
+  "begin": [
+    {"let" :{"name" :"$date", "value":"2015-11-19"}}
+            ],
+  "source": { "file": { "path": "/home/jenica/Data/test_edge_update/gene_link/NA19087_hg19_chrX_ref_frag.csv" } },
+  
+  "extractor": { "row": {
+                    } },
+  
+  "transformers": [
+    { "csv": {} },
+     {"command":{"command":"select from reference_l1 where coordinate='${input.coordinate}' and assembly='${input.assembly}' and nucleotide='${input.referenceNT}' ","output":"vertex"}},
+     {"command":{"command":"select from patient_vm where nipmID='${input.nipmID}'","output":"vertex"}},
+    {"command":{"command":"create edge has_reference from (select from patient_vm where nipmID='${input.nipmID}') to (select from reference_l1 where coordinate='${input.coordinate}' and assembly='${input.assembly}' and nucleotide='${input.referenceNT}' ) set assembly='${input.assembly}',qScore='${input.qScore}', assemblyVersion='${input.assemblyVersion}', heterozygosity='${input.heterozygosity}', readDepth='${input.readDepth}', filter='${input.filter}'","output":"edge"}}
+    
+  ],
+  "loader": {
+    "orientdb": {
+      "dbAutoCreate":true,
+       "dbURL": "remote:/home/jenica/programs/orientdb-community-2.1.12/databases/test2",
+       "dbType": "graph",
+       "dbUser":"admin",
+       "dbPassword":"admin",
+       "tx":true
+          
+    }
+  }
+}

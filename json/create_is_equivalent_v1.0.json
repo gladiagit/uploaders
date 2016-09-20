@@ -1,0 +1,31 @@
+{
+  "config": {"log":"debug"},
+  "source": { "file": { "path": "/home/jenica/Data/test_edge_update/gene_link/hg19-chrXfrag-to-hg38-link.txt" } },
+  
+  "extractor": { "row": {
+                    } },
+  
+  "transformers": [
+    { "csv": {"separator": "\t"} },
+    { "vertex": { "class": "temporary"} },
+    {"log":{"prefix":"->"}},
+    {"command":{"command":"select from reference_l1 where coordinate='${input.assembly1chr}:${input.assembly1start}' and assembly='${input.assembly1}' ","output":"vertex"}},
+    {"command":{"command":"create edge is_equivalent from (select from reference_l1 where coordinate='${input.assembly1chr}:${input.assembly1start}' and assembly='${input.assembly1}' ) to (select from reference_l1 where coordinate='${input.assembly2chr}:${input.assembly2start}' and assembly='${input.assembly2}') ","output":"edge"}},
+    {"command":{"command":"delete vertex temporary where assembly1chr='${input.assembly1chr}' and assembly1start='${input.assembly1start}'","output":"vertex"}}
+  ],
+    
+  "loader": {
+    "orientdb": {
+      "dbAutoCreate":true,
+       "dbURL": "remote:/home/jenica/programs/orientdb-community-2.1.12/databases/test2",
+       "dbType": "graph",
+       "dbUser":"admin",
+       "dbPassword":"admin",
+       
+       "classes": [
+         {"name": "temporary", "extends": "V"}
+          ]      
+      
+    }
+  }
+}

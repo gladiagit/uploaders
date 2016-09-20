@@ -1,0 +1,33 @@
+{
+  "config": {"log":"none"},
+  "source": { "file": { "path": "fpathValue" } },
+  "extractor": { "row": {
+                    } },
+  
+  "transformers": [
+    { "csv": {} },
+    { "vertex": { "class": "structuresAffectedValue", "skipDuplicates":true} },
+    {"command":{"command":"Insert into Track_upload_VM set database='databaseValue', protocol='protocolValue', userName='userNameValue',dateOfStart='dateOfStartValue', inFileName='inFileNameValue', totalNLines='totalNLinesValue', settingsFileName='settingsFileNameValue', endPosition=0, structuresAffected='structuresAffectedValue'  ","output":"vertex"}}
+    {"command":{"command":"Update Track_upload_VM set completed=true, dateOfStop='dateOfStopValue' where database='databaseValue'and protocol='protocolValue'and userName='userNameValue' and dateOfStart='dateOfStartValue' and inFileName='inFileNameValue' and totalNLines='totalNLinesValue' and settingsFileName='settingsFileNameValue' and structuresAffected='structuresAffectedValue'  ","output":"vertex"}} 
+    {"command":{"command":"Update Track_upload_VM set status=pComplete(totalNLines,endPosition) where database='databaseValue'and protocol='protocolValue'and userName='userNameValue' and dateOfStart='dateOfStartValue' and inFileName='inFileNameValue' and totalNLines='totalNLinesValue' and settingsFileName='settingsFileNameValue' and structuresAffected='structuresAffectedValue'  ","output":"vertex"}}, 
+    {"command":{"command":"Update track_upload_vm increment endPosition=1 where database='databaseValue'and protocol='protocolValue'and userName='userNameValue' and dateOfStart='dateOfStartValue' and inFileName='inFileNameValue' and totalNLines='totalNLinesValue' and settingsFileName='settingsFileNameValue' and structuresAffected='structuresAffectedValue' ","output":"property"}}
+  ],
+  "loader": {
+    "orientdb": {
+      "dbAutoCreate":true,
+       "dbURL": "protocolValue:databaseValue",
+       "dbType": "graph",
+       "dbUser":"userNameValue",
+       "dbPassword":"passwordValue",
+       
+       "classes": [
+         {"name": "structuresAffectedValue", "extends": "V"}
+       ],
+       "indexes": [
+         {"class":"structuresAffectedValue", "fields":["coordinate:string"], "type":"NOTUNIQUE" },
+         {"class":"structuresAffectedValue", "fields":["assembly:string","assemblyVersion:string","coordinate:string"], "type":"NOTUNIQUE" }
+       ]
+      
+    }
+  }
+}
