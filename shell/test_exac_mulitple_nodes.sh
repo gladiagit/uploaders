@@ -1,7 +1,8 @@
 #####################################################
 # Jenica Abrudan, NIPM V1.0 09/20/2016              #
 #####################################################
-#!/bin/sh -x
+#!/usr/bin/env bash -x
+
 
 
 EXACPATH="/data1/home/nipm/jenica/Data/exac"
